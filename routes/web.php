@@ -17,9 +17,19 @@ use App\Models\Listing;
 // todos -- all listings
 Route::get('/', [ListingController::class, 'index']);
 
+// show create form
+Route::get('/listings/create', [ListingController::class, 'create']);
+
+// store listings data
+Route::post('/listings', [ListingController::class, 'store']);
+
 // single listing
 // TODO
 // look
 Route::get('/listings/{listing}', [ListingController::class, 'show']);
+
+
+// create new route -> new controller method-> new view
+// workflow
 
 

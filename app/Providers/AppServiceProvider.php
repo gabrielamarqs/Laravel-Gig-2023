@@ -22,5 +22,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Model::unguard();
         // allowing the mass assignment
+        // Paginator::useBootstrapFive();
     }
 }

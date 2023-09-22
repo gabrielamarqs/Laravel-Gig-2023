@@ -31,11 +31,11 @@ class ListingController extends Controller
     }
 
 
-    // show listing data
-    public function store(Request $request) {
+    // update listing data
+    public function update(Request $request, Listing $listing) {
         $formFields = $request->validate([
             'title' => 'required',
-            'company' => ['required', Rule::unique('listings', 'company')],
+            'company' => 'required',
             'location' => 'required',
             'website' => 'required',
             'email' => ['required', 'email'],
@@ -43,14 +43,51 @@ class ListingController extends Controller
             'description' => 'required',
         ]);
 
+        if ($request->hasFile('logo')) {
+            $formFields['logo'] = $request->file('logo')->store('logos', 'public');
+        }
+
         // TODO
         // se for usar o unguard pro mass assignment
         // fazer antes um array com os valores validados que você quer inserir no seu banco
 
-        Listing::create($formFields);
+        $listing->update($formFields);
 
+        return back()->with('message', 'Listing updated successfully!');
+    }
 
+        // show listing data
+        public function store(Request $request) {
+            $formFields = $request->validate([
+                'title' => 'required',
+                'company' => ['required', Rule::unique('listings', 'company')],
+                'location' => 'required',
+                'website' => 'required',
+                'email' => ['required', 'email'],
+                'tags' => 'required',
+                'description' => 'required',
+            ]);
+    
+            if ($request->hasFile('logo')) {
+                $formFields['logo'] = $request->file('logo')->store('logos', 'public');
+            }
+    
+            // TODO
+            // se for usar o unguard pro mass assignment
+            // fazer antes um array com os valores validados que você quer inserir no seu banco
+    
+            Listing::create($formFields);
+    
+            return redirect('/')->with('message', 'Listing created successfully!');
+        }
 
-        return redirect('/')->with('message', 'Listing created successfully!');
+    public function edit(Listing $listing) {
+        // dd($listing);
+        return view('listings.edit', ['listing' => $listing]);
+    }
+
+    public function destroy(Listing $listing) {
+        $listing->delete();
+        return redirect('/')->with('message', 'Listing deleted successfully!');
     }
 }

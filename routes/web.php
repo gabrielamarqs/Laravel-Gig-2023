@@ -41,6 +41,18 @@ Route::get('/listings/{listing}', [ListingController::class, 'show']);
 // show register/create form
 Route::get('/register', [UserController::class, 'create']);
 
+// create new user
+Route::post('/users', [UserController::class, 'store']);
+
+// log user out
+Route::post('/logout', [UserController::class, 'logout']);
+
+// show login form
+Route::get('/login', [UserController::class, 'login']);
+
+// log in user
+Route::post('/users/authenticate', [UserController::class, 'authenticate']);
+
 
 // create new route -> new controller method-> new view
 // workflow

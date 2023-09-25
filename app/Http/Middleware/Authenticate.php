@@ -13,5 +13,8 @@ class Authenticate extends Middleware
     protected function redirectTo(Request $request): ?string
     {
         return $request->expectsJson() ? null : route('login');
+        // toda vez que for fazer algo que precisa de login, nas rotas vc coloca request auth 
+        // e dai o midleware vai fazer com que redirecione para a rota do login
+        // ex.: Route::get('/listings/create', [ListingController::class, 'create'])->middleware('auth');
     }
 }

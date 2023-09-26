@@ -15,8 +15,13 @@ use App\Models\Listing;
 // update - update listing
 // destroy - delete listing
 
+
+
 // todos -- all listings
 Route::get('/', [ListingController::class, 'index']);
+
+// Manage listings
+Route::get('/listings/manage', [ListingController::class, 'manage'])->middleware('auth');
 
 // show create form
 Route::get('/listings/create', [ListingController::class, 'create'])->middleware('auth');
@@ -37,6 +42,7 @@ Route::delete('/listings/{listing}', [ListingController::class, 'destroy'])->mid
 // TODO
 // look
 Route::get('/listings/{listing}', [ListingController::class, 'show']);
+
 
 // show register/create form
 Route::get('/register', [UserController::class, 'create'])->middleware('guest');

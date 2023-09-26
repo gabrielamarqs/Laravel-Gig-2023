@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Listing;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+
 
 class ListingController extends Controller
 {   
@@ -33,6 +35,12 @@ class ListingController extends Controller
 
     // update listing data
     public function update(Request $request, Listing $listing) {
+
+        // make sure login user is owner
+        if($listing->user_id != auth()->id()) {
+            abort(403, 'Unauthorized action');
+        }
+
         $formFields = $request->validate([
             'title' => 'required',
             'company' => 'required',
@@ -76,18 +84,35 @@ class ListingController extends Controller
             // se for usar o unguard pro mass assignment
             // fazer antes um array com os valores validados que você quer inserir no seu banco
     
+            $formFields['user_id'] = auth()->id();
+            
             Listing::create($formFields);
     
             return redirect('/')->with('message', 'Listing created successfully!');
         }
 
     public function edit(Listing $listing) {
+        // if($listing->user_id != auth()->id()) {
+        //     abort(403, 'Unauthorized action');
+        // }
         // dd($listing);
         return view('listings.edit', ['listing' => $listing]);
     }
 
     public function destroy(Listing $listing) {
+        if($listing->user_id != auth()->id()) {
+            abort(403, 'Unauthorized action');
+        }
+
         $listing->delete();
         return redirect('/')->with('message', 'Listing deleted successfully!');
     }
+
+    // manage listings
+    public function manage() {
+        // dd(auth()->user()->listings()->get());
+        return view('listings.manage', ['listings' => auth()->user()->listings()->get()]);
+        // illuminate\database\eloquent\erlations
+    }
+
 }
